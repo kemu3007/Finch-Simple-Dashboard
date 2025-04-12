@@ -16,11 +16,6 @@
 			path = "Finch-Simple-Dashboard";
 			sourceTree = "<group>";
 		};
-		6BB5A8C02DAA461600D4B2DE /* Views */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Views;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +34,6 @@
 			children = (
 				6BB5A8942DA95A7F00D4B2DE /* Finch-Simple-Dashboard */,
 				6BB5A8932DA95A7F00D4B2DE /* Products */,
-				6BB5A8C02DAA461600D4B2DE /* Views */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,7 +62,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				6BB5A8942DA95A7F00D4B2DE /* Finch-Simple-Dashboard */,
-				6BB5A8C02DAA461600D4B2DE /* Views */,
 			);
 			name = "Finch-Simple-Dashboard";
 			packageProductDependencies = (
