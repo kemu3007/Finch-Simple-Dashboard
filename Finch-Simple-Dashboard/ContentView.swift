@@ -35,7 +35,6 @@ func formatResponse(cliResult: (String, String)) -> String {
 }
 
 struct ContentView: View {
-    @State private var viewID = UUID()
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
     @AppStorage("dockerMode") var dockerMode: Bool = false
     
@@ -108,6 +107,13 @@ struct ContentView: View {
                     window.makeKeyAndOrderFront(nil)
                 } label: {
                     Image(systemName: "gearshape")
+                }
+                Button {
+                    refreshContainers(mute: true)
+                    refreshImages(mute: true)
+                    refreshVolumes(mute: true)
+                } label: {
+                    Image(systemName: "arrow.trianglehead.clockwise")
                 }
                 Spacer()
             }
@@ -340,11 +346,7 @@ struct ContentView: View {
             VStack {
                 Text("Finch / Docker is not installed or running. Please install finch and start vm.(or install docker and start deamon)")
             }
-        }.contextMenu(menuItems: {
-            Button("RefreshAll") {
-                self.viewID = UUID()
-            }
-        }).id(viewID).navigationTitle(getTitle())
+        }
     }
 }
 
