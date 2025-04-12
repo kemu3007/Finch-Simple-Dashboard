@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		6BB5A8922DA95A7F00D4B2DE /* Finch-Desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Finch-Desktop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BB5A8922DA95A7F00D4B2DE /* Finch-Simple-Dashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Finch-Simple-Dashboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6BB5A8942DA95A7F00D4B2DE /* Finch-Desktop */ = {
+		6BB5A8942DA95A7F00D4B2DE /* Finch-Simple-Dashboard */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Finch-Desktop";
+			path = "Finch-Simple-Dashboard";
+			sourceTree = "<group>";
+		};
+		6BB5A8C02DAA461600D4B2DE /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,15 +37,16 @@
 		6BB5A8892DA95A7F00D4B2DE = {
 			isa = PBXGroup;
 			children = (
-				6BB5A8942DA95A7F00D4B2DE /* Finch-Desktop */,
+				6BB5A8942DA95A7F00D4B2DE /* Finch-Simple-Dashboard */,
 				6BB5A8932DA95A7F00D4B2DE /* Products */,
+				6BB5A8C02DAA461600D4B2DE /* Views */,
 			);
 			sourceTree = "<group>";
 		};
 		6BB5A8932DA95A7F00D4B2DE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6BB5A8922DA95A7F00D4B2DE /* Finch-Desktop.app */,
+				6BB5A8922DA95A7F00D4B2DE /* Finch-Simple-Dashboard.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +54,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6BB5A8912DA95A7F00D4B2DE /* Finch-Desktop */ = {
+		6BB5A8912DA95A7F00D4B2DE /* Finch-Simple-Dashboard */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6BB5A8A12DA95A8000D4B2DE /* Build configuration list for PBXNativeTarget "Finch-Desktop" */;
+			buildConfigurationList = 6BB5A8A12DA95A8000D4B2DE /* Build configuration list for PBXNativeTarget "Finch-Simple-Dashboard" */;
 			buildPhases = (
 				6BB5A88E2DA95A7F00D4B2DE /* Sources */,
 				6BB5A88F2DA95A7F00D4B2DE /* Frameworks */,
@@ -61,13 +67,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6BB5A8942DA95A7F00D4B2DE /* Finch-Desktop */,
+				6BB5A8942DA95A7F00D4B2DE /* Finch-Simple-Dashboard */,
+				6BB5A8C02DAA461600D4B2DE /* Views */,
 			);
-			name = "Finch-Desktop";
+			name = "Finch-Simple-Dashboard";
 			packageProductDependencies = (
 			);
 			productName = "Finch-Desktop";
-			productReference = 6BB5A8922DA95A7F00D4B2DE /* Finch-Desktop.app */;
+			productReference = 6BB5A8922DA95A7F00D4B2DE /* Finch-Simple-Dashboard.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +92,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6BB5A88D2DA95A7F00D4B2DE /* Build configuration list for PBXProject "Finch-Desktop" */;
+			buildConfigurationList = 6BB5A88D2DA95A7F00D4B2DE /* Build configuration list for PBXProject "Finch-Simple-Dashboard" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +106,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6BB5A8912DA95A7F00D4B2DE /* Finch-Desktop */,
+				6BB5A8912DA95A7F00D4B2DE /* Finch-Simple-Dashboard */,
 			);
 		};
 /* End PBXProject section */
@@ -244,14 +251,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Finch-Desktop/Finch_Desktop.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Finch-Simple-Dashboard/Finch_Dashboard.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Finch-Desktop/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Finch-Simple-Dashboard/Preview Content\"";
 				DEVELOPMENT_TEAM = VP5J4KK585;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -265,15 +273,15 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "K-TECH.Finch-Desktop";
+				PRODUCT_BUNDLE_IDENTIFIER = "K-TECH.Finch-Simple-Dashboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -283,14 +291,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Finch-Desktop/Finch_Desktop.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Finch-Simple-Dashboard/Finch_Dashboard.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Finch-Desktop/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Finch-Simple-Dashboard/Preview Content\"";
 				DEVELOPMENT_TEAM = VP5J4KK585;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -304,15 +313,15 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "K-TECH.Finch-Desktop";
+				PRODUCT_BUNDLE_IDENTIFIER = "K-TECH.Finch-Simple-Dashboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -320,7 +329,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6BB5A88D2DA95A7F00D4B2DE /* Build configuration list for PBXProject "Finch-Desktop" */ = {
+		6BB5A88D2DA95A7F00D4B2DE /* Build configuration list for PBXProject "Finch-Simple-Dashboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BB5A89F2DA95A8000D4B2DE /* Debug */,
@@ -329,7 +338,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6BB5A8A12DA95A8000D4B2DE /* Build configuration list for PBXNativeTarget "Finch-Desktop" */ = {
+		6BB5A8A12DA95A8000D4B2DE /* Build configuration list for PBXNativeTarget "Finch-Simple-Dashboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BB5A8A22DA95A8000D4B2DE /* Debug */,
