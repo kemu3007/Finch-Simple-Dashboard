@@ -33,7 +33,7 @@ func parseFinchImages(from jsonString: String) -> [FinchImage] {
             guard let jsonDict = jsonObject as? [String: Any] else { continue }
             let image = FinchImage(
                 imageId: jsonDict["ID"] as? String ?? "",
-                name: jsonDict["Name"] as? String ?? "",
+                name: jsonDict["Name"] as? String ?? (jsonDict["Repository"] as? String ?? ""),
                 tag: jsonDict["Tag"] as? String ?? "",
                 platform: jsonDict["Platform"] as? String ?? "",
                 created: jsonDict["CreatedAt"] as? String ?? "",

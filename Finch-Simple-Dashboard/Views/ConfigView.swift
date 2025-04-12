@@ -10,6 +10,7 @@ import SwiftUI
 struct ConfigView: View {
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
     @AppStorage("lineLimit") var lineLimit: Int = 500
+    @AppStorage("dockerMode") var dockerMode: Bool = false
     
     @State var version = ""
     @State var error = ""
@@ -33,6 +34,11 @@ struct ConfigView: View {
             }
             Text(version)
             Text(error)
+            HStack {
+                Text("Enable Docker Mode:")
+                Toggle("", isOn: $dockerMode)
+                Spacer()
+            }
         }
         .padding()
     }

@@ -37,6 +37,7 @@ func formatResponse(cliResult: (String, String)) -> String {
 struct ContentView: View {
     @State private var viewID = UUID()
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
+    @AppStorage("dockerMode") var dockerMode: Bool = false
     
     @State var displayAlert = false
     @State var searchText = ""
@@ -45,6 +46,14 @@ struct ContentView: View {
     @State var images: [FinchImage] = []
     @State var volumes: [FinchVolume] = []
     @State var logs: String = ""
+    
+    func getTitle() -> String {
+        var title = "Finch Simple Dashboard"
+        if dockerMode {
+            title += " (Docker Mode)"
+        }
+        return title
+    }
 
     func refreshComposes(mute: Bool = false) {
         let result = runCommand(path: finchPath, args: ["volume", "ls", "--format", "json"])
@@ -85,6 +94,25 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack {
+                Text(getTitle()).font(.title)
+                Button {
+                    let window = NSWindow(
+                        contentRect: NSRect(x: 200, y: 300, width: 500, height: 600),
+                        styleMask: [.titled, .closable, .resizable],
+                        backing: .buffered,
+                        defer: false
+                    )
+                    window.title = "Configuration"
+                    window.contentView = NSHostingView(rootView: ConfigView())
+                    window.isReleasedWhenClosed = false
+                    window.makeKeyAndOrderFront(nil)
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                Spacer()
+            }
+            Divider()
+            HStack {
                 Text("Containers").font(.headline)
                 Button {
                     refreshContainers()
@@ -92,19 +120,18 @@ struct ContentView: View {
                     Image(systemName: "arrow.trianglehead.clockwise")
                 }
             }
-            Table (containers) {
+            Table (containers.sorted { $0.composeProject > $1.composeProject}) {
                 TableColumn("COMPOSE PROJECT") { container in
                     HStack {
                         Text(container.composeProject).textSelection(.enabled)
                         if container.composeProject != "" {
-                            if container.status == "Up" {
+                            if container.status.starts(with: "Up") {
                                 Button {
                                     let targets = containers.filter { $0.composeProject == container.composeProject }
                                     for targe in targets {
                                         let result = runCommand(path: finchPath, args: ["stop", targe.containerId])
                                         logs += finchPath + " stop " + targe.containerId + "\n"
                                         logs += formatResponse(cliResult: result)
-
                                     }
                                     refreshContainers(mute: true)
                                 } label: {
@@ -203,7 +230,7 @@ struct ContentView: View {
                             Image(systemName: "arrow.trianglehead.clockwise")
                         }
                     }
-                    Table(images) {
+                    Table(images.sorted { $0.name > $1.name }) {
                         TableColumn("ID") { image in
                             Text(image.imageId).textSelection(.enabled)
                         }
@@ -249,7 +276,7 @@ struct ContentView: View {
                                 Image(systemName: "arrow.trianglehead.clockwise")
                             }
                         }
-                        Table(volumes) {
+                        Table(volumes.sorted { $0.name > $1.name} ) {
                             TableColumn("Name") { volume in
                                 Text(volume.name).textSelection(.enabled)
                             }
@@ -297,25 +324,27 @@ struct ContentView: View {
                 logs += formatResponse(cliResult: version)
                 return
             }
-            let vmStatus = runCommand(path: finchPath, args: ["vm", "status"])
-            if vmStatus.0 != "Running\n" {
-                displayAlert = true
-                logs += finchPath + " vm status" + "\n"
-                logs += formatResponse(cliResult: vmStatus)
-                return
+            if !dockerMode {
+                let vmStatus = runCommand(path: finchPath, args: ["vm", "status"])
+                if vmStatus.0 != "Running\n" {
+                    displayAlert = true
+                    logs += finchPath + " vm status" + "\n"
+                    logs += formatResponse(cliResult: vmStatus)
+                    return
+                }
             }
             refreshContainers(mute: true)
             refreshImages(mute: true)
             refreshVolumes(mute: true)
-        }.alert("FINCH_EXECUTION_ERROR", isPresented: .constant(displayAlert)) {} message: {
+        }.alert("EXECUTION_ERROR", isPresented: .constant(displayAlert)) {} message: {
             VStack {
-                Text("Finch is not installed or running. Please install finch and start vm.")
+                Text("Finch / Docker is not installed or running. Please install finch and start vm.(or install docker and start deamon)")
             }
         }.contextMenu(menuItems: {
             Button("RefreshAll") {
                 self.viewID = UUID()
             }
-        }).id(viewID).navigationTitle("Finch Simple Dashboard")
+        }).id(viewID).navigationTitle(getTitle())
     }
 }
 
