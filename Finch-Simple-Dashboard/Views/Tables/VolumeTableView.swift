@@ -10,10 +10,10 @@ import SwiftUI
 struct VolumeTableView: View {
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
     @AppStorage("logs") var logs: String = ""
-
+    
     var volumes: [FinchVolume]
     var refreshAction: () -> Void = { }
-
+    
     init(volumes: [FinchVolume], refreshAction: @escaping () -> Void) {
         self.volumes = volumes
         self.refreshAction = refreshAction
@@ -53,7 +53,6 @@ struct VolumeTableView: View {
                 }
             }.width(min: 100)
         }
-
     }
 }
 

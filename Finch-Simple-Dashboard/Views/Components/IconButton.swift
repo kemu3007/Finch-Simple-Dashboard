@@ -10,7 +10,7 @@ import SwiftUI
 struct IconButton: View {
     var iconName: String
     var action: () -> Void = { }
-
+    
     init(iconName: String, action: @escaping () -> Void) {
         self.iconName = iconName
         self.action = action

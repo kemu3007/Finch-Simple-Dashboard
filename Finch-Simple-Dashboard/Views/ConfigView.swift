@@ -20,7 +20,7 @@ struct ConfigView: View {
         version = result.0
         error = result.1
     }
-
+    
     var body: some View {
         VStack {
             HStack {

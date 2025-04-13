@@ -10,15 +10,17 @@ import SwiftUI
 struct ContainerTableView: View {
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
     @AppStorage("logs") var logs: String = ""
-
+    
+    @State var serchText: String = ""
+    
     var containers: [FinchContainer]
     var refreshAction: () -> Void = { }
-
+    
     init(containers: [FinchContainer], refreshAction: @escaping () -> Void) {
         self.containers = containers
         self.refreshAction = refreshAction
     }
-
+    
     var body: some View {
         Table (containers.sorted { $0.composeProject > $1.composeProject}) {
             TableColumn("COMPOSE PROJECT") { container in
@@ -122,4 +124,3 @@ struct ContainerTableView: View {
         }
     }
 }
-

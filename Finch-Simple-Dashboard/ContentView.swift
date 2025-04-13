@@ -12,18 +12,18 @@ func runCommand(path: String, args: [String]) -> (String, String) {
     let process = Process()
     process.launchPath = path
     process.arguments = args
-
+    
     let outputPipe = Pipe()
     let errorPipe = Pipe()
     process.standardOutput = outputPipe
     process.standardError = errorPipe
-
+    
     let outputHandle = outputPipe.fileHandleForReading
     let errorHandle = errorPipe.fileHandleForReading
-
+    
     var output = ""
     var errorOutput = ""
-
+    
     // 非同期で読み取る
     outputHandle.readabilityHandler = { handle in
         if let line = String(data: handle.availableData, encoding: .utf8) {
@@ -35,14 +35,14 @@ func runCommand(path: String, args: [String]) -> (String, String) {
             errorOutput += line
         }
     }
-
+    
     process.launch()
     process.waitUntilExit()
-
+    
     // ハンドラを解除する
     outputHandle.readabilityHandler = nil
     errorHandle.readabilityHandler = nil
-
+    
     return (output, errorOutput)
 }
 
@@ -67,7 +67,7 @@ struct ContentView: View {
     @State var containers: [FinchContainer] = []
     @State var images: [FinchImage] = []
     @State var volumes: [FinchVolume] = []
-
+    
     func getTitle() -> String {
         var title = "Finch Simple Dashboard"
         if dockerMode {
@@ -75,7 +75,7 @@ struct ContentView: View {
         }
         return title
     }
-
+    
     func refreshComposes(mute: Bool = false) {
         let result = runCommand(path: finchPath, args: ["volume", "ls", "--format", "json"])
         volumes = parseFinchVolumes(from: result.0)
@@ -93,7 +93,7 @@ struct ContentView: View {
             logs += formatResponse(cliResult: result)
         }
     }
-
+    
     func refreshImages(mute: Bool = false) {
         let result = runCommand(path: finchPath, args: ["images", "--format", "json"])
         images = parseFinchImages(from: result.0)
@@ -111,7 +111,7 @@ struct ContentView: View {
             logs += formatResponse(cliResult: result)
         }
     }
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -141,7 +141,7 @@ struct ContentView: View {
                 IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshContainers() })
             }
             ContainerTableView(containers: containers.filter { $0.status.starts(with: "Up") }, refreshAction: { refreshContainers(mute: true) }).frame(height: 120)
-
+            
             HStack {
                 Text("Containers").font(.headline)
                 IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshContainers() })

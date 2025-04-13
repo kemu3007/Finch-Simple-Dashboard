@@ -12,7 +12,7 @@ struct InspectView: View {
     
     @State var inspectResult: String = ""
     let targetId: String
-
+    
     init(targetId: String) {
         self.targetId = targetId
     }
@@ -21,7 +21,7 @@ struct InspectView: View {
         let result = runCommand(path: finchPath, args: ["inspect", targetId])
         self.inspectResult = result.0.isEmpty ? result.1 : result.0
     }
-
+    
     var body: some View {
         VStack {
             TextEditor(text: .constant(inspectResult))
