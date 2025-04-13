@@ -12,15 +12,38 @@ func runCommand(path: String, args: [String]) -> (String, String) {
     let process = Process()
     process.launchPath = path
     process.arguments = args
-    let pipe = Pipe()
+
+    let outputPipe = Pipe()
     let errorPipe = Pipe()
-    process.standardOutput = pipe
+    process.standardOutput = outputPipe
     process.standardError = errorPipe
+
+    let outputHandle = outputPipe.fileHandleForReading
+    let errorHandle = errorPipe.fileHandleForReading
+
+    var output = ""
+    var errorOutput = ""
+
+    // 非同期で読み取る
+    outputHandle.readabilityHandler = { handle in
+        if let line = String(data: handle.availableData, encoding: .utf8) {
+            output += line
+        }
+    }
+    errorHandle.readabilityHandler = { handle in
+        if let line = String(data: handle.availableData, encoding: .utf8) {
+            errorOutput += line
+        }
+    }
+
     process.launch()
     process.waitUntilExit()
-    let msg = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-    let error = String(data: errorPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-    return (msg, error)
+
+    // ハンドラを解除する
+    outputHandle.readabilityHandler = nil
+    errorHandle.readabilityHandler = nil
+
+    return (output, errorOutput)
 }
 
 func formatResponse(cliResult: (String, String)) -> String {
@@ -40,6 +63,8 @@ struct ContentView: View {
     
     @State var displayAlert = false
     @State var searchText = ""
+    @State var showLogs: Bool = false
+    @State var logContainerId = ""
     
     @State var containers: [FinchContainer] = []
     @State var images: [FinchImage] = []
