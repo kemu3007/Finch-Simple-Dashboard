@@ -63,8 +63,6 @@ struct ContentView: View {
     
     @State var displayAlert = false
     @State var searchText = ""
-    @State var showLogs: Bool = false
-    @State var logContainerId = ""
     
     @State var containers: [FinchContainer] = []
     @State var images: [FinchImage] = []
