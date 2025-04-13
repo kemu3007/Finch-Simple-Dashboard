@@ -60,15 +60,14 @@ func formatResponse(cliResult: (String, String)) -> String {
 struct ContentView: View {
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
     @AppStorage("dockerMode") var dockerMode: Bool = false
+    @AppStorage("logs") var logs: String = ""
     
     @State var displayAlert = false
-    @State var searchText = ""
     
     @State var containers: [FinchContainer] = []
     @State var images: [FinchImage] = []
     @State var volumes: [FinchVolume] = []
-    @State var logs: String = ""
-    
+
     func getTitle() -> String {
         var title = "Finch Simple Dashboard"
         if dockerMode {
@@ -117,7 +116,7 @@ struct ContentView: View {
         VStack {
             HStack {
                 Text(getTitle()).font(.title)
-                Button {
+                IconButton(iconName: "gearshape", action: {
                     let window = NSWindow(
                         contentRect: NSRect(x: 200, y: 300, width: 500, height: 600),
                         styleMask: [.titled, .closable, .resizable],
@@ -128,216 +127,45 @@ struct ContentView: View {
                     window.contentView = NSHostingView(rootView: ConfigView())
                     window.isReleasedWhenClosed = false
                     window.makeKeyAndOrderFront(nil)
-                } label: {
-                    Image(systemName: "gearshape")
-                }
-                Button {
+                })
+                IconButton(iconName: "arrow.trianglehead.clockwise", action: {
                     refreshContainers(mute: true)
                     refreshImages(mute: true)
                     refreshVolumes(mute: true)
-                } label: {
-                    Image(systemName: "arrow.trianglehead.clockwise")
-                }
+                })
                 Spacer()
             }
             Divider()
             HStack {
+                Text("Running Containers").font(.headline)
+                IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshContainers() })
+            }
+            ContainerTableView(containers: containers.filter { $0.status.starts(with: "Up") }, refreshAction: { refreshContainers(mute: true) }).frame(height: 120)
+
+            HStack {
                 Text("Containers").font(.headline)
-                Button {
-                    refreshContainers()
-                } label: {
-                    Image(systemName: "arrow.trianglehead.clockwise")
-                }
+                IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshContainers() })
             }
-            Table (containers.sorted { $0.composeProject > $1.composeProject}) {
-                TableColumn("COMPOSE PROJECT") { container in
-                    HStack {
-                        Text(container.composeProject).textSelection(.enabled)
-                        if container.composeProject != "" {
-                            if container.status.starts(with: "Up") {
-                                Button {
-                                    let targets = containers.filter { $0.composeProject == container.composeProject }
-                                    for targe in targets {
-                                        let result = runCommand(path: finchPath, args: ["stop", targe.containerId])
-                                        logs += finchPath + " stop " + targe.containerId + "\n"
-                                        logs += formatResponse(cliResult: result)
-                                    }
-                                    refreshContainers(mute: true)
-                                } label: {
-                                    Image(systemName: "stop")
-                                }
-                            } else {
-                                Button {
-                                    let targets = containers.filter { $0.composeProject == container.composeProject }
-                                    for targe in targets {
-                                        let result = runCommand(path: finchPath, args: ["start", targe.containerId])
-                                        logs += finchPath + " start " + targe.containerId + "\n"
-                                        logs += formatResponse(cliResult: result)
-                                    }
-                                    refreshContainers(mute: true)
-                                } label: {
-                                    Image(systemName: "play")
-                                }
-                            }
-                        }
-                    }
-                }
-                TableColumn("CONTAINER ID") { container in
-                    Text(container.containerId).textSelection(.enabled)
-                }
-                TableColumn("IMAGE") { container in
-                    Text(container.image).textSelection(.enabled)
-                }
-                TableColumn("COMMAND") { container in
-                    Text(container.command).textSelection(.enabled)
-                }
-                TableColumn("CREATED") { container in
-                    Text(container.created).textSelection(.enabled)
-                }
-                TableColumn("STATUS") { container in
-                    Text(container.status).textSelection(.enabled)
-                }
-                TableColumn("PORTS") { container in
-                    Text(container.ports).textSelection(.enabled)
-                }
-                TableColumn("NAMES") { container in
-                    Text(container.names).textSelection(.enabled)
-                }
-                TableColumn("ACTIONS") { container in
-                    HStack {
-                        if container.status == "Up" {
-                            Button {
-                                let result = runCommand(path: finchPath, args: ["stop", container.containerId])
-                                logs += finchPath + " stop " + container.containerId  + "\n"
-                                logs += formatResponse(cliResult: result)
-                                refreshContainers(mute: true)
-                            } label: {
-                                Image(systemName: "stop")
-                            }
-                        } else {
-                            Button {
-                                let result = runCommand(path: finchPath, args: ["start", container.containerId])
-                                logs += finchPath + " start " + container.containerId  + "\n"
-                                logs += formatResponse(cliResult: result)
-                                refreshContainers(mute: true)
-                            } label: {
-                                Image(systemName: "play")
-                            }
-                            Button {
-                                let result = runCommand(path: finchPath, args: ["rm", container.containerId])
-                                logs += finchPath + " rm " + container.containerId  + "\n"
-                                logs += formatResponse(cliResult: result)
-                                refreshContainers(mute: true)
-                            } label: {
-                                Image(systemName: "trash")
-                            }
-                        }
-                        Button {
-                            let window = NSWindow(
-                                contentRect: NSRect(x: 200, y: 600, width: 1000, height: 600),
-                                styleMask: [.titled, .closable, .resizable],
-                                backing: .buffered,
-                                defer: false
-                            )
-                            window.title = container.containerId + " logs"
-                            window.contentView = NSHostingView(rootView: LogView(containerId: container.containerId))
-                            window.isReleasedWhenClosed = false
-                            window.makeKeyAndOrderFront(nil)
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                        }
-                    }
-                }
-            }
+            ContainerTableView(containers: containers, refreshAction: { refreshContainers(mute: true) })
             HStack {
                 VStack {
                     HStack {
                         Text("Images").font(.headline)
-                        Button {
-                            refreshImages()
-                        } label: {
-                            Image(systemName: "arrow.trianglehead.clockwise")
-                        }
+                        IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshImages() })
                     }
-                    Table(images.sorted { $0.name > $1.name }) {
-                        TableColumn("ID") { image in
-                            Text(image.imageId).textSelection(.enabled)
-                        }
-                        TableColumn("Name") { image in
-                            Text(image.name).textSelection(.enabled)
-                        }
-                        TableColumn("Tag") { image in
-                            Text(image.tag).textSelection(.enabled)
-                        }
-                        TableColumn("Size") { image in
-                            Text(image.size).textSelection(.enabled)
-                        }
-                        TableColumn("Platform") { image in
-                            Text(image.platform).textSelection(.enabled)
-                        }
-                        TableColumn("ACTIONS") { image in
-                            HStack {
-                                Button {
-                                    let result = runCommand(path: finchPath, args: ["run", "-d", image.imageId])
-                                    logs += finchPath + " run -d " + image.imageId + "\n"
-                                    logs += formatResponse(cliResult: result)
-                                    refreshContainers(mute: true)
-                                } label: {
-                                    Image(systemName: "play")
-                                }
-                                Button {
-                                    let result = runCommand(path: finchPath, args: ["image", "rm", image.imageId])
-                                    logs += finchPath + " image rm " + image.imageId + "\n"
-                                    logs += formatResponse(cliResult: result)
-                                    refreshImages(mute: true)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
-                            }
-                        }
-                    }
+                    ImageTableView(images: images, refreshAction: { refreshImages(mute: true) })
                     VStack {
                         HStack {
                             Text("Volumes").font(.headline)
-                            Button {
-                                refreshVolumes()
-                            } label: {
-                                Image(systemName: "arrow.trianglehead.clockwise")
-                            }
+                            IconButton(iconName: "arrow.trianglehead.clockwise", action: { refreshVolumes() })
                         }
-                        Table(volumes.sorted { $0.name > $1.name} ) {
-                            TableColumn("Name") { volume in
-                                Text(volume.name).textSelection(.enabled)
-                            }
-                            TableColumn("Size") { volume in
-                                Text(volume.size).textSelection(.enabled)
-                            }
-                            TableColumn("MoundPoint") { volume in
-                                Text(volume.mountpoint).textSelection(.enabled)
-                            }
-                            TableColumn("ACTIONS") { volume in
-                                HStack {
-                                    Button {
-                                        let result = runCommand(path: finchPath, args: ["volume", "rm", volume.name])
-                                        logs += finchPath + " volume rm " + volume.name + "\n"
-                                        logs += formatResponse(cliResult: result)
-                                        refreshVolumes(mute: true)
-                                    } label: {
-                                        Image(systemName: "trash")
-                                    }
-                                }
-                            }
-                        }
+                        VolumeTableView(volumes: volumes, refreshAction: { refreshVolumes(mute: true) })
                     }
                 }
                 VStack {
                     HStack {
                         Text("Logs").font(.headline)
-                        Button {
-                            logs = ""
-                        } label: {
-                            Image(systemName: "trash")
-                        }
+                        IconButton(iconName: "trash", action: { logs = "" })
                     }
                     TextEditor (text: .constant(logs))
                 }

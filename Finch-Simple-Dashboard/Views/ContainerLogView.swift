@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LogView: View {
+struct ContainerLogView: View {
     let containerId: String
     @State var logs: String = ""
     @AppStorage("finchPath") var finchPath: String = "/usr/local/bin/finch"
